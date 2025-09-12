@@ -21,11 +21,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RouteSignin, RouteSignup } from "@/helpers/RouteName";
+import { getEnv } from "@/helpers/getEnv";
+import { showToast } from "@/helpers/showToast";
 ("use client");
 
 function Signup() {
+  const navigate = useNavigate();
   const formSchema = z
     .object({
       name: z
@@ -47,13 +50,36 @@ function Signup() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
   // 2. Define a submit handler.
-  function onSubmit(values) {
-    console.log(values);
+  async function onSubmit(values) {
+    const { confirmPassword, ...data } = values;
+    // Sending data to backen logic here 
+    try {
+      const res = await fetch(`${getEnv("VITE_API_BASE_URL")}/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const resData = await res.json();
+      if(!res.ok) {
+        showToast( "error", resData.message || "Something went wrong",);
+        return;
+      }
+        showToast("success", resData.message || "Account created successfully");
+      navigate(RouteSignin);
+    } catch (error) {
+      showToast("error", error.message || "Something went wrong");
+      return;
+    }
+
   }
   return (
     <div className="flex justify-center items-center h-screen w-screen">
