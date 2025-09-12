@@ -21,16 +21,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Link } from "react-router-dom";
-import { RouteSignup } from "@/helpers/RouteName";
+import { Link, useNavigate } from "react-router-dom";
+import { RouteIndex, RouteSignup } from "@/helpers/RouteName";
+import { showToast } from "@/helpers/showToast";
+import { getEnv } from "@/helpers/getEnv";
 ("use client");
 
 function Signin() {
+  const navigate = useNavigate();
   const formSchema = z.object({
     email: z.string().email(),
     password: z
       .string()
-      .min(8, "Password must be 8 cahracters log")
+      .min(4, "Password too short")
       .max(32, "Password too long"),
   });
   // 1. Define your form.
@@ -42,8 +45,36 @@ function Signin() {
     },
   });
   // 2. Define a submit handler.
-  function onSubmit(values) {
-    console.log(values);
+  async function onSubmit(data) {
+    try {
+        const res = await fetch(`${getEnv("VITE_API_BASE_URL")}/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(data),
+        }); 
+    
+        const resData = await res.json();
+    
+        // handle API-side errors
+        if (resData?.error) {
+          showToast("error", resData?.message || "Something went wrong!");
+          return;
+        }
+    
+        // handle HTTP errors (non-2xx)
+        if (!res.ok) {
+          showToast("error", resData?.message || "Something went wrong!");
+          return;
+        }
+    
+        // success
+        navigate(RouteIndex);
+        showToast("success", "Registered Successfully! Please login.");
+    
+      } catch (error) {
+        showToast("error", error?.message || "Something went wrong!");
+      }
   }
   return (
     <div className="flex justify-center items-center h-screen w-screen">
