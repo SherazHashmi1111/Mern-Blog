@@ -26,16 +26,23 @@ import { RouteSignin, RouteSignup } from "@/helpers/RouteName";
 ("use client");
 
 function Signup() {
-  const formSchema = z.object({
-    name: z.string().min(2, "Name must be 2 cahracters log").max(32, "Name too long"),
-    email: z.string().email(),
-    password: z
-      .string()
-      .min(8, "Password must be 8 cahracters log")
-      .max(32, "Password too long"),
-    confirmPassword: z
-      .string().refine(data => data.password === data.confirmPassword, "Passwords do not match"),
-  });
+  const formSchema = z
+    .object({
+      name: z
+        .string()
+        .min(2, "Name must be 2 cahracters log")
+        .max(32, "Name too long"),
+      email: z.string().email(),
+      password: z
+        .string()
+        .min(8, "Password must be 8 cahracters log")
+        .max(32, "Password too long"),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      path: ["confirmPassword"], // 👈 error shows under confirmPassword field
+      message: "Passwords do not match",
+    });
   // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -104,7 +111,11 @@ function Signup() {
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter Your password" {...field} />
+                        <Input
+                          placeholder="Enter Your password"
+                          type="password"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -119,7 +130,11 @@ function Signup() {
                     <FormItem>
                       <FormLabel>Confirm Password</FormLabel>
                       <FormControl>
-                        <Input placeholder="Again Enter Your password" {...field} />
+                        <Input
+                          placeholder="Again Enter Your password"
+                          type="password"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -135,10 +150,10 @@ function Signup() {
           </Form>
         </CardContent>
         <CardFooter className="flex justify-center gap-3 mt-7">
-            <p>Have an account?</p>
-            <Link to={RouteSignin} className="text-blue-500 hover:underline">
-              Sign In
-            </Link>
+          <p>Have an account?</p>
+          <Link to={RouteSignin} className="text-blue-500 hover:underline">
+            Sign In
+          </Link>
         </CardFooter>
       </Card>
     </div>
