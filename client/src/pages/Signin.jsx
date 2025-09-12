@@ -25,6 +25,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { RouteIndex, RouteSignup } from "@/helpers/RouteName";
 import { showToast } from "@/helpers/showToast";
 import { getEnv } from "@/helpers/getEnv";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/store/user/userSlice";
+import GoogleLogin from "@/components/GoogleLogin";
 ("use client");
 
 function Signin() {
@@ -46,6 +49,7 @@ function Signin() {
   });
   // 2. Define a submit handler.
   async function onSubmit(data) {
+    const dispatch = useDispatch();
     try {
         const res = await fetch(`${getEnv("VITE_API_BASE_URL")}/auth/login`, {
           method: "POST",
@@ -69,6 +73,7 @@ function Signin() {
         }
     
         // success
+        dispatch(setUser(resData));
         navigate(RouteIndex);
         showToast("success", "Registered Successfully! Please login.");
     
@@ -86,6 +91,14 @@ function Signin() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {/* //GoogleLogin component */}
+          <div className="mb-3">
+            <GoogleLogin/>
+            <div className="border my-5 flex items-center justify-center">
+              <span className="absolute bg-white">Or</span>
+            </div>
+          </div>
+          {/* //Form component */}
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <div className="mb-3">
