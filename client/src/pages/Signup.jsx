@@ -21,33 +21,75 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RouteSignin, RouteSignup } from "@/helpers/RouteName";
+import { getEnv } from "@/helpers/getEnv";
+import { showToast } from "@/helpers/showToast";
 ("use client");
 
 function Signup() {
-  const formSchema = z.object({
-    name: z.string().min(2, "Name must be 2 cahracters log").max(32, "Name too long"),
-    email: z.string().email(),
+  const navigate = useNavigate();
+  const formSchema = z
+  .object({
+    name: z.string().min(2, "Name must be 2 characters long").max(32, "Name too long"),
+    email: z.string().email("Invalid email address"),
     password: z
       .string()
-      .min(8, "Password must be 8 cahracters log")
+      .min(8, "Password must be at least 8 characters long")
       .max(32, "Password too long"),
-    confirmPassword: z
-      .string().refine(data => data.password === data.confirmPassword, "Passwords do not match"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"], // 👈 error shows under confirmPassword
+    message: "Passwords do not match",
   });
-  // 1. Define your form.
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
+
+// 1. Define your form.
+const form = useForm({
+  resolver: zodResolver(formSchema),
+  defaultValues: {
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "", // 👈 you must include this too
+  },
+});
+
   // 2. Define a submit handler.
-  function onSubmit(values) {
-    console.log(values);
+  async function onSubmit(values) {
+  // remove confirmPassword before sending to backend
+  const { confirmPassword, ...data } = values;
+
+  try {
+    const res = await fetch(`${getEnv("VITE_API_BASE_URL")}/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    const resData = await res.json();
+
+    // handle API-side errors
+    if (resData?.error) {
+      showToast("error", resData?.message || "Something went wrong!");
+      return;
+    }
+
+    // handle HTTP errors (non-2xx)
+    if (!res.ok) {
+      showToast("error", resData?.message || "Something went wrong!");
+      return;
+    }
+
+    // success
+    showToast("success", "Registered Successfully! Please login.");
+    navigate(RouteSignin);
+
+  } catch (error) {
+    showToast("error", error?.message || "Something went wrong!");
   }
+}
+
   return (
     <div className="flex justify-center items-center h-screen w-screen">
       <Card className={"w-[400px]"}>
@@ -104,7 +146,7 @@ function Signup() {
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter Your password" {...field} />
+                        <Input placeholder="Enter Your password" type="password" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -119,7 +161,7 @@ function Signup() {
                     <FormItem>
                       <FormLabel>Confirm Password</FormLabel>
                       <FormControl>
-                        <Input placeholder="Again Enter Your password" {...field} />
+                        <Input placeholder="Again Enter Your password" type="password" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
