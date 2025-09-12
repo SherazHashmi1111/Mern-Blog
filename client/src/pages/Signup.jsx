@@ -25,70 +25,73 @@ import { Link, useNavigate } from "react-router-dom";
 import { RouteSignin, RouteSignup } from "@/helpers/RouteName";
 import { getEnv } from "@/helpers/getEnv";
 import { showToast } from "@/helpers/showToast";
+import GoogleLogin from "@/components/GoogleLogin";
 ("use client");
 
 function Signup() {
   const navigate = useNavigate();
   const formSchema = z
-  .object({
-    name: z.string().min(2, "Name must be 2 characters long").max(32, "Name too long"),
-    email: z.string().email("Invalid email address"),
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters long")
-      .max(32, "Password too long"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    path: ["confirmPassword"], // 👈 error shows under confirmPassword
-    message: "Passwords do not match",
-  });
+    .object({
+      name: z
+        .string()
+        .min(2, "Name must be 2 characters long")
+        .max(32, "Name too long"),
+      email: z.string().email("Invalid email address"),
+      password: z
+        .string()
+        .min(8, "Password must be at least 8 characters long")
+        .max(32, "Password too long"),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      path: ["confirmPassword"], // 👈 error shows under confirmPassword
+      message: "Passwords do not match",
+    });
 
-// 1. Define your form.
-const form = useForm({
-  resolver: zodResolver(formSchema),
-  defaultValues: {
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "", // 👈 you must include this too
-  },
-});
+  // 1. Define your form.
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "", // 👈 you must include this too
+    },
+  });
 
   // 2. Define a submit handler.
   async function onSubmit(values) {
-  // remove confirmPassword before sending to backend
-  const { confirmPassword, ...data } = values;
+    // remove confirmPassword before sending to backend
+    const { confirmPassword, ...data } = values;
 
-  try {
-    const res = await fetch(`${getEnv("VITE_API_BASE_URL")}/auth/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    }); 
+    try {
+      const res = await fetch(`${getEnv("VITE_API_BASE_URL")}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
-    const resData = await res.json();
+      const resData = await res.json();
 
-    // handle API-side errors
-    if (resData?.error) {
-      showToast("error", resData?.message || "Something went wrong!");
-      return;
+      // handle API-side errors
+      if (resData?.error) {
+        showToast("error", resData?.message || "Something went wrong!");
+        return;
+      }
+
+      // handle HTTP errors (non-2xx)
+      if (!res.ok) {
+        showToast("error", resData?.message || "Something went wrong!");
+        return;
+      }
+
+      // success
+      showToast("success", "Registered Successfully! Please login.");
+      navigate(RouteSignin);
+    } catch (error) {
+      showToast("error", error?.message || "Something went wrong!");
     }
-
-    // handle HTTP errors (non-2xx)
-    if (!res.ok) {
-      showToast("error", resData?.message || "Something went wrong!");
-      return;
-    }
-
-    // success
-    showToast("success", "Registered Successfully! Please login.");
-    navigate(RouteSignin);
-
-  } catch (error) {
-    showToast("error", error?.message || "Something went wrong!");
   }
-}
 
   return (
     <div className="flex justify-center items-center h-screen w-screen">
@@ -100,6 +103,12 @@ const form = useForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
+          <div className="mb-3">
+            <GoogleLogin/>
+            <div className="border my-5 flex items-center justify-center">
+              <span className="absolute bg-white">Or</span>
+            </div>
+          </div>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <div className="mb-3">
@@ -146,7 +155,11 @@ const form = useForm({
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter Your password" type="password" {...field} />
+                        <Input
+                          placeholder="Enter Your password"
+                          type="password"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -161,7 +174,11 @@ const form = useForm({
                     <FormItem>
                       <FormLabel>Confirm Password</FormLabel>
                       <FormControl>
-                        <Input placeholder="Again Enter Your password" type="password" {...field} />
+                        <Input
+                          placeholder="Again Enter Your password"
+                          type="password"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -177,10 +194,10 @@ const form = useForm({
           </Form>
         </CardContent>
         <CardFooter className="flex justify-center gap-3 mt-7">
-            <p>Have an account?</p>
-            <Link to={RouteSignin} className="text-blue-500 hover:underline">
-              Sign In
-            </Link>
+          <p>Have an account?</p>
+          <Link to={RouteSignin} className="text-blue-500 hover:underline">
+            Sign In
+          </Link>
         </CardFooter>
       </Card>
     </div>
