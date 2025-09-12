@@ -17,7 +17,6 @@ Thumbs.db
 
 # Node.js / React
 node_modules/
-.env
 
 # Python
 __pycache__/
