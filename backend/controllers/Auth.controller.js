@@ -1,6 +1,7 @@
 import { handleError } from "../helpers/handleError.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 export const Register = async (req, res, next) => {
   try {
@@ -39,6 +40,43 @@ export const Register = async (req, res, next) => {
   }
 };
 
+// Login Controller
 export const Login = async (req, res, next) => {
-  // You can implement login here later
+  try {
+    const { email, password } = req.body;
+
+    // Basic validation (uncomment if needed)
+    if (!email) return next(handleError(400, "Email is required"));
+    if (!password) return next(handleError(400, "Password is required"));
+    // Check if user exists
+    const user = await User.findOne({ email });
+    if (!user) return next(handleError(400, "Invalid email or password"));
+    // Compare passwords
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return next(handleError(400, "Invalid email or password"));
+
+    //Jwt Token generation can be added here
+    const token = jwt.sign(
+      { name: user.name, email: user.email, _id: user._id, avatar: user.avatar },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1d",
+      }
+    );
+    res.cookie("access_token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      path: "/",
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+    });
+    // Successful login
+    return res.status(200).json({
+      success: true,
+      user,
+      message: "Login successful",
+    });
+  } catch (error) {
+    next(handleError(500, "Server Error in auth Controller"));
+  }
 };
