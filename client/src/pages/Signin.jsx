@@ -31,6 +31,7 @@ import GoogleLogin from "@/components/GoogleLogin";
 ("use client");
 
 function Signin() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const formSchema = z.object({
     email: z.string().email(),
@@ -49,7 +50,6 @@ function Signin() {
   });
   // 2. Define a submit handler.
   async function onSubmit(data) {
-    const dispatch = useDispatch();
     try {
         const res = await fetch(`${getEnv("VITE_API_BASE_URL")}/auth/login`, {
           method: "POST",

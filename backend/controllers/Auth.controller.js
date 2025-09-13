@@ -115,7 +115,7 @@ export const GoogleLogin = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: "Login successful",
-      user: { id: user._id, name: user.name, email: user.email },
+      user: { id: user._id, name: user.name, email: user.email, avatar: user.avatar },
     });
   } catch (error) {
     next(handleError(500, "Server Error in auth Controller"));

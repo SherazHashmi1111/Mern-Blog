@@ -25,33 +25,33 @@ import { getEnv } from "@/helpers/getEnv";
 function Topbar() {
   const userData = useSelector((state) => state.user);
   const user = userData.user.user;
+
   const dispatch = useDispatch();
-  const navigate = useNavigate();;
- //Logout logic 
+  const navigate = useNavigate();
+  //Logout logic
   const logoutHandler = async () => {
-     try {
-            const res = await fetch(`${getEnv("VITE_API_BASE_URL")}/auth/logout`, {
-              method: "get",
-              credentials: "include",
-            }); 
-        
-            const resData = await res.json();
-        
-            // handle HTTP errors (non-2xx)
-            if (!res.ok) {
-              showToast("error", resData?.message || "Something went wrong!");
-              return;
-            }
-        
-            // success
-            dispatch(removeUser());
-            navigate(RouteSignup);
-            showToast("success", "Logout Successfully! Please login again.");
-        
-          } catch (error) {
-            showToast("error", error?.message || "Something went wrong!");
-          }
-  }
+    try {
+      const res = await fetch(`${getEnv("VITE_API_BASE_URL")}/auth/logout`, {
+        method: "get",
+        credentials: "include",
+      });
+
+      const resData = await res.json();
+
+      // handle HTTP errors (non-2xx)
+      if (!res.ok) {
+        showToast("error", resData?.message || "Something went wrong!");
+        return;
+      }
+
+      // success
+      dispatch(removeUser());
+      navigate(RouteSignup);
+      showToast("success", "Logout Successfully! Please login again.");
+    } catch (error) {
+      showToast("error", error?.message || "Something went wrong!");
+    }
+  };
   return (
     <div className="w-full h-16 bg-white fixed flex items-center justify-between border-b px-10 z-10">
       <div className="flex items-center justify-center">
@@ -73,8 +73,8 @@ function Topbar() {
           <DropdownMenu>
             <DropdownMenuTrigger>
               <Avatar className="w-14 h-14">
-                <AvatarImage src={user.Avatar || userAvtar} />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarImage src={user?.avatar || userAvtar} />
+                <AvatarFallback>{user?.name?.charAt(0) || "U"}</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="mr-5">
@@ -84,21 +84,25 @@ function Topbar() {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link to="#">
-                  <FaUserCircle color="orange"/>
+                <Link to="/profile">
+                  <FaUserCircle color="orange" />
                   Profile
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link to="#">
-                  <FaPlus color="green"/>
+                  <FaPlus color="green" />
                   Create Blog
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuSeparator/>
+              <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Button onClick={logoutHandler} variant="outline" className="w-full cursor-pointer">
-                  <CiLogout color="red"/>
+                <Button
+                  onClick={logoutHandler}
+                  variant="outline"
+                  className="w-full cursor-pointer"
+                >
+                  <CiLogout color="red" />
                   Logout
                 </Button>
               </DropdownMenuItem>
