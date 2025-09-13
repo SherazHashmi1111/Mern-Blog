@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import cors from "cors";
-import authRoute from "./routes/Auth.route.js";
+import AuthRoute from "./routes/Auth.route.js";
 dotenv.config();
 const PORT = process.env.PORT || 5000;
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
@@ -19,7 +19,7 @@ app.use(
 );
 
 // Routes
-app.use("/api/auth", authRoute);
+app.use("/api/auth", AuthRoute);
 
 mongoose
   .connect(process.env.MONGODB_URI, {dbName: "mern-blog"})

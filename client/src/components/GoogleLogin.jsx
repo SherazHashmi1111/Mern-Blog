@@ -46,7 +46,7 @@ function GoogleLogin() {
                 // success
                 dispatch(setUser(resData));
                 navigate(RouteIndex);
-                showToast("success", "Registered Successfully! Please login.");
+                showToast("success", "LogedIn Successfull!");
             
               } catch (error) {
                 showToast("error", error?.message || "Something went wrong!");

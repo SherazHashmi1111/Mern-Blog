@@ -75,7 +75,7 @@ function Signin() {
         // success
         dispatch(setUser(resData));
         navigate(RouteIndex);
-        showToast("success", "Registered Successfully! Please login.");
+        showToast("success", "Logedin Successfully!");
     
       } catch (error) {
         showToast("error", error?.message || "Something went wrong!");
