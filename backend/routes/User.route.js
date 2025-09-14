@@ -1,8 +1,26 @@
+// ===============================
+// Imports
+// ===============================
 import express from "express";
+import { getUser, updateUser } from "../controllers/User.controller.js";
+import upload from "../config/multter.js";
+
 const UserRoute = express.Router();
 
-import { getUser } from "../controllers/User.controller.js";
+// ===============================
+// User Routes
+// ===============================
 
+// ✅ Get a user by ID
+// Example: GET /api/user/get-user/12345
 UserRoute.get("/get-user/:userid", getUser);
 
+// ✅ Update user by ID
+// Accepts form-data with optional file upload (`file` field)
+// Example: PUT /api/user/update-user/12345
+UserRoute.put("/update-user/:userid", upload.single("file"), updateUser);
+
+// ===============================
+// Export
+// ===============================
 export default UserRoute;
