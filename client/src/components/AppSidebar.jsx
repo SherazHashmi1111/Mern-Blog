@@ -46,7 +46,7 @@ function AppSidebar() {
 
               <SidebarMenuItem>
                 <SidebarMenuSubButton asChild>
-                  <Link to="/">
+                  <Link to="/categories">
                     <TbCategory2 className="mr-2" />
                     Categories
                   </Link>
