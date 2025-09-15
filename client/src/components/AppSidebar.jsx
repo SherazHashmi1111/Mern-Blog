@@ -55,7 +55,7 @@ function AppSidebar() {
 
               <SidebarMenuItem>
                 <SidebarMenuSubButton asChild>
-                  <Link to="/">
+                  <Link to="/blog">
                     <FaBlogger className="mr-2" />
                     Blog
                   </Link>

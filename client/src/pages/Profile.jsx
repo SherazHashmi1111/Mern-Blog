@@ -136,7 +136,7 @@ function Profile() {
   if (loading) return <Loading />;
 
   return (
-    <Card className="max-w-screen-md mx-auto mt-40 flex items-center justify-center">
+    <Card className="">
       {/* Avatar Upload */}
       <div>
         <Dropzone
