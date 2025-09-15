@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardAction,
@@ -33,20 +33,25 @@ import { deleteData } from "@/helpers/handleDelete";
 import { showToast } from "@/helpers/showToast";
 
 function CategoryDetails() {
+  const [refreshData, setRefreshData] = useState();
   const { data, error, loading } = useFetch(
     `${getEnv("VITE_API_BASE_URL")}/category/all`,
     {
       method: "GET",
       credentials: "include",
-    }
+    }, [refreshData]
   );
 
   const handleDelete = (id) => {
-    const response = deleteData(`${getEnv("VITE_API_BASE_URL")}/category/delete/${id}`,{
-      method: "DELETE",
-      credentials: "include",
-    });
+    const response = deleteData(
+      `${getEnv("VITE_API_BASE_URL")}/category/delete/${id}`,
+      {
+        method: "DELETE",
+        credentials: "include",
+      }
+    );
     if (response) {
+      setRefreshData(!refreshData);
       showToast("Success", "Data Deleted");
     } else {
       showToast("Error", "Data Not Deleted");
