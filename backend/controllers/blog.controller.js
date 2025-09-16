@@ -64,44 +64,47 @@ export const getAllBlogs = async (req, res, next) => {
   }
 };
 // // Show one blog logic goes here
-// export const getBlog = async (req, res, next) => {
-//   try {
-//     const { categoryid } = req.params;
-//     console.log(categoryid);
+export const getBlog = async (req, res, next) => {
+  try {
+    const { blogid } = req.params;
 
-//     const blog = await Blog.findById(categoryid);
-//     if (!blog) return next(handleError(404, "Blog not found"));
+    const blog = await Blog.findById(blogid)
+      .populate("author", "name")
+      .populate("category", "name")
+      .lean()
+      .exec();
+    if (!blog) return next(handleError(404, "Blog not found"));
 
-//     res.status(200).json({
-//       blog,
-//     });
-//   } catch (error) {
-//     next(handleError(500, "Error from blog controller"));
-//   }
-// };
+    res.status(200).json({
+      blog,
+    });
+  } catch (error) {
+    next(handleError(500, "Error from blog controller"));
+  }
+};
 // // Update blog logic goes here
-// export const updateBlog = async (req, res, next) => {
-//   try {
-//     const { name, slug } = req.body;
-//     const { categoryid } = req.params;
-//     const blog = await Blog.findByIdAndUpdate(
-//       categoryid,
-//       {
-//         name,
-//         slug,
-//       },
-//       { new: true }
-//     );
+export const updateBlog = async (req, res, next) => {
+  try {
+    const { name, slug } = req.body;
+    const { blogid } = req.params;
+    const blog = await Blog.findByIdAndUpdate(
+      blogid,
+      {
+        name,
+        slug,
+      },
+      { new: true }
+    );
 
-//     res.status(200).json({
-//       success: true,
-//       message: "Blog updated",
-//       blog,
-//     });
-//   } catch (error) {
-//     next(handleError(500, "Error from blog controller"));
-//   }
-// };
+    res.status(200).json({
+      success: true,
+      message: "Blog updated",
+      blog,
+    });
+  } catch (error) {
+    next(handleError(500, "Error from blog controller"));
+  }
+};
 // // Delete blog logic goes here
 export const deleteBlog = async (req, res, next) => {
   try {

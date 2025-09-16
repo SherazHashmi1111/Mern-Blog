@@ -3,7 +3,7 @@
 // ===============================
 import express from "express";
 import upload from "../config/multter.js";
-import { addBolg, deleteBlog, getAllBlogs} from "../controllers/blog.controller.js";
+import { addBolg, deleteBlog, getAllBlogs, getBlog, updateBlog} from "../controllers/blog.controller.js";
 
 const BlogRoute = express.Router();
 
@@ -16,8 +16,9 @@ const BlogRoute = express.Router();
 BlogRoute.post("/add", upload.single("file"), addBolg);
 BlogRoute.get("/all", getAllBlogs);
 BlogRoute.delete("/delete/:blogid", deleteBlog);
-// BlogRoute.post("/all", upload.single("file"), UpdateBlog);
-// BlogRoute.post("/all", upload.single("file"), deleteBlog);
+BlogRoute.get("/blog/:blogid", getBlog);
+BlogRoute.post("/all", upload.single("file"), deleteBlog);
+BlogRoute.post("/edit/:blogid", upload.single("file"), updateBlog);
 
 // ✅ Update user by ID
 // Accepts form-data with optional file upload (`file` field)
