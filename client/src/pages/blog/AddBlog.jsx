@@ -26,10 +26,16 @@ import {
 import { useFetch } from "@/hooks/useFetch";
 import Dropzone from "react-dropzone";
 import Editor from "@/components/ui/Editor";
+import { useSelector } from "react-redux";
+import Loading from "@/components/ui/loding";
+import { useNavigate } from "react-router-dom";
+import { RouteBlog } from "@/helpers/RouteName";
 
 function AddBlog() {
   const [filePreview, setFilePreview] = useState();
   const [file, setFile] = useState();
+  const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
 
   // Data fetched for getting categories names
   const { data, error, loading } = useFetch(
@@ -43,22 +49,18 @@ function AddBlog() {
 
   // Form logic
   const formSchema = z.object({
-    category: z
-      .string()
-      .min(2, "category must be 2 characters long")
-      .max(32, "category too long"),
+    category: z.string(),
     title: z
       .string()
       .min(2, "Title must be 2 characters long")
-      .max(32, "Title too long"),
+      .max(64, "Title too long"),
     slug: z
       .string()
       .min(2, "Slug must be 2 characters long")
-      .max(32, "Slug too long"),
+      .max(64, "Slug too long"),
     blogContent: z
       .string()
       .min(2, "BlogContent must be 2 characters long")
-      .max(32, "BlogContent too long"),
   });
 
   // 1. Define your form.
@@ -92,34 +94,40 @@ function AddBlog() {
 
   // 2. Define a submit handler.
   async function onSubmit(values) {
-    // remove confirmPassword before sending to backend
-    console.log(values);
-    
-    // try {
-    //       // Build FormData with file + form fields
-    //       const formData = new FormData();
-    //       if (file) formData.append("file", file);
-    //       formData.append("data", JSON.stringify(data));
-    //       const res = await fetch(
-    //         `${getEnv("VITE_API_BASE_URL")}/user/update-user/${user.user.id}`,
-    //         {
-    //           method: "PUT",
-    //           credentials: "include",
-    //           body: formData,
-    //         }
-    //       );
-    //       const resData = await res.json();
-    //       // Handle errors
-    //       if (!res.ok || resData?.error) {
-    //         showToast("error", resData?.message || "Something went wrong!");
-    //         return;
-    //       }
-    //       // Update redux state
-    //       dispatch(setUser({ user: resData.newUser }));
-    //       showToast("success", "Profile updated successfully!");
-    //     } catch (error) {
-    //       showToast("error", error?.message || "Something went wrong!");
-    //     }
+    const data = { ...values, author: user.user.user.id };
+
+    try {
+      // Build FormData with file + form fields
+      const formData = new FormData();
+      if (file) formData.append("file", file);
+      formData.append("data", JSON.stringify(data));
+
+      const res = await fetch(`${getEnv("VITE_API_BASE_URL")}/blog/add/`, {
+        method: "POST",
+        credentials: "include",
+        body: formData,
+      });
+
+      const resData = await res.json();
+
+      // Handle errors
+      if (!res.ok || resData?.error) {
+        showToast("error", resData?.message || "Something went wrong!");
+        return;
+      }
+
+      // rest files
+      form.reset();
+      setFile();
+      setFilePreview();
+
+      // Update redux state
+      //  dispatch(setUser({ user: resData.newUser }));
+      navigate(RouteBlog);
+      showToast("success", "New Blog successfully!");
+    } catch (error) {
+      showToast("error", error?.message || "Something went wrong!");
+    }
   }
 
   // ===============================

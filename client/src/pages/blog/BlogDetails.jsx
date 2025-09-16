@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardAction,
@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { RouteAddBolg } from "@/helpers/RouteName";
+import { RouteAddBolg, RouteUpdateBlog } from "@/helpers/RouteName";
 import {
   Table,
   TableBody,
@@ -30,90 +30,129 @@ import { showToast } from "@/helpers/showToast";
 
 function BlogDetails() {
   const [refreshData, setRefreshData] = useState();
-  const { data, error, loading } = useFetch(
-    `${getEnv("VITE_API_BASE_URL")}/category/all`,
-    {
-      method: "GET",
-      credentials: "include",
-    },
-    [refreshData]
+  const [blogs, setBlogs] = useState([]); // state for blogs
+
+  //Fetch Blogs
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const res = await fetch(`${getEnv("VITE_API_BASE_URL")}/blog/all`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch blogs");
+        }
+
+        const data = await res.json();
+        setBlogs(data); // store blogs in state
+      } catch (err) {
+        console.error(err.message);
+      }
+    };
+    fetchBlogs();
+  }, [refreshData]);
+
+  //Deleting blog logic
+  const handleDelete = async (id) => {
+  const response = await deleteData(
+    `${getEnv("VITE_API_BASE_URL")}/blog/delete/${id}`
   );
 
-  const handleDelete = (id) => {
-    const response = deleteData(
-      `${getEnv("VITE_API_BASE_URL")}/category/delete/${id}`,
-      {
-        method: "DELETE",
-        credentials: "include",
-      }
-    );
-    if (response) {
-      setRefreshData(!refreshData);
-      showToast("Success", "Data Deleted");
-    } else {
-      showToast("Error", "Data Not Deleted");
-    }
-  };
+  if (response) {
+    setRefreshData(!refreshData);
+    showToast("Success", "Blog Deleted");
+  } else {
+    showToast("Error", "Blog Not Deleted");
+  }
+};
+
 
   return (
     <div>
-      {loading ? (
-        <Loading />
-      ) : (
-        <div className="">
-          <Card className="max-w-screen mx-4 mt-20">
-            <CardHeader>
-              <Button className="cursor-pointer w-24" asChild>
-                <Link to={RouteAddBolg}>Add Blog</Link>
-              </Button>
-            </CardHeader>
-            <CardContent className={`w-full`}>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Author</TableHead>
-                    <TableHead>Category Name</TableHead>
-                    <TableHead>Title</TableHead>
-                    <TableHead>Slug</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Action</TableHead>
-                  </TableRow>
-                </TableHeader>
-                {/* <TableBody>
-                  {data && data?.categories?.length > 0 ? (
-                    data.categories.map((item) => (
-                      <TableRow>
-                        <TableCell className={``}>{item.name}</TableCell>
-                        <TableCell className={``}>{item.slug}</TableCell>
-                        <TableCell className={``}>
-                          <Button className={`cursor-pointer`} asChild>
-                            <Link to={RouteUpdateCategory(item._id)}>
-                              <FaRegEdit />
-                            </Link>
-                          </Button>
-                          <Button
-                            className={`cursor-pointer ml-3`}
-                            variant="destructive"
-                            onClick={() => handleDelete(item._id)}
-                          >
-                            <MdDeleteForever />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
+      <div className="">
+        <Card className="max-w-[95%] mx-4 mt-20">
+          <CardHeader>
+            <Button className="cursor-pointer w-24" asChild>
+              <Link to={RouteAddBolg}>Add Blog</Link>
+            </Button>
+          </CardHeader>
+          <CardContent className={`w-full`}>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Author</TableHead>
+                  <TableHead>Category Name</TableHead>
+                  <TableHead>Title</TableHead>
+                  <TableHead>Slug</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Action</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {blogs && blogs?.blogs?.length > 0 ? (
+                  blogs.blogs.map((item) => (
                     <TableRow>
-                      <TableCell colSpan="3" className={`text-center`}>
-                        Data not found
+                      <TableCell
+                        className={`w-[17%] whitespace-normal break-words`}
+                      >
+                        {item.author.name}
+                      </TableCell>
+                      <TableCell
+                        className={`w-[17%] whitespace-normal break-words`}
+                      >
+                        {item.category.name}
+                      </TableCell>
+                      <TableCell
+                        className={`w-[17%] whitespace-normal break-words`}
+                      >
+                        {item.title}
+                      </TableCell>
+                      <TableCell
+                        className={`w-[17%] whitespace-normal break-words`}
+                      >
+                        {item.slug}
+                      </TableCell>
+                      <TableCell
+                        className={`w-[17%] whitespace-normal break-words`}
+                      >
+                        {new Date(item.createdAt).toLocaleString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                      </TableCell>
+                      <TableCell
+                        className={`w-[17%] whitespace-normal break-words`}
+                      >
+                        <Button className={`cursor-pointer`} asChild>
+                          <Link to={RouteUpdateBlog(item._id)}>
+                            <FaRegEdit />
+                          </Link>
+                        </Button>
+                        <Button
+                          className={`cursor-pointer ml-3`}
+                          variant="destructive"
+                          onClick={() => handleDelete(item._id)}
+                        >
+                          <MdDeleteForever />
+                        </Button>
                       </TableCell>
                     </TableRow>
-                  )}
-                </TableBody> */}
-              </Table>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan="3" className={`text-center`}>
+                      Data not found
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

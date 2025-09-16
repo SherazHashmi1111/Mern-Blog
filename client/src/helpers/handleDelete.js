@@ -1,6 +1,10 @@
 export const deleteData = async (endpoint) => {
-  const c = confirm("Are you sure to delete this data?");
-  if (!c) return false;
+  const confirmed = confirm("Are you sure to delete this data?");
+  
+  if (!confirmed) {
+    alert("Canceled");
+    return false; // exit early, no backend call
+  }
 
   try {
     const response = await fetch(endpoint, {
@@ -14,9 +18,11 @@ export const deleteData = async (endpoint) => {
       throw new Error(data?.message || response.statusText);
     }
 
-    return true; // deleted successfully
+    alert("Deleted successfully");
+    return true;
   } catch (error) {
     console.error("Delete failed:", error);
+    alert("Delete failed: " + error.message);
     return false;
   }
 };
