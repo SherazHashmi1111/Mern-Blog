@@ -85,24 +85,42 @@ export const getBlog = async (req, res, next) => {
 // // Update blog logic goes here
 export const updateBlog = async (req, res, next) => {
   try {
-    const { name, slug } = req.body;
+    // Parse blog data from body
+    const data = JSON.parse(req.body.data);
     const { blogid } = req.params;
-    const blog = await Blog.findByIdAndUpdate(
-      blogid,
-      {
-        name,
-        slug,
-      },
-      { new: true }
-    );
 
-    res.status(200).json({
+    const blog = await Blog.findById(blogid);
+
+    category= data.category,
+      title= data.title,
+      slug= data.slug,
+      blogContent= encode(data.blogContent || ""),
+      let featuredImage = blog.featuredImage;
+    // Upload featured image (if provided)
+    
+    if (req.file) {
+      try {
+        const uploadResult = await cloudinary.uploader.upload(req.file.path, {
+          folder: "mern-blog",
+          resource_type: "auto",
+        });
+      } catch (err) {
+        return next(handleError(500, "Image upload failed: " + err.message));
+      }
+      featuredImage = uploadResult.secure_url
+    }
+
+    
+
+    await blog.save();
+
+    res.status(201).json({
       success: true,
-      message: "Blog updated",
+      message: "Blog updated successfully",
       blog,
     });
   } catch (error) {
-    next(handleError(500, "Error from blog controller"));
+    next(handleError(500, "Error in add blog controller"));
   }
 };
 // // Delete blog logic goes here

@@ -18,7 +18,7 @@ BlogRoute.get("/all", getAllBlogs);
 BlogRoute.delete("/delete/:blogid", deleteBlog);
 BlogRoute.get("/blog/:blogid", getBlog);
 BlogRoute.post("/all", upload.single("file"), deleteBlog);
-BlogRoute.post("/edit/:blogid", upload.single("file"), updateBlog);
+BlogRoute.put("/edit/:blogid", upload.single("file"), updateBlog);
 
 // ✅ Update user by ID
 // Accepts form-data with optional file upload (`file` field)

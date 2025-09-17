@@ -37,6 +37,7 @@ function UpdateBlog() {
   const [filePreview, setFilePreview] = useState();
   const [file, setFile] = useState();
   const user = useSelector((state) => state.user);
+  
   const navigate = useNavigate();
   const blogid = params.blogid;
 
