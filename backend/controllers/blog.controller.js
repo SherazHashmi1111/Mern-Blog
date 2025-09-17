@@ -51,7 +51,7 @@ export const getAllBlogs = async (req, res, next) => {
   try {
     const blogs = await Blog.find()
       .populate("author", "name avatar")
-      .populate("category", "name")
+      .populate("category", "name slug")
       .sort({ created_at: -1 })
       .lean()
       .exec();
@@ -63,14 +63,35 @@ export const getAllBlogs = async (req, res, next) => {
     next(handleError(500, "Error from blog controller"));
   }
 };
-// // Show one blog logic goes here
+// // Get one blog by id
 export const getBlog = async (req, res, next) => {
   try {
-    const { blogid } = req.params;
+    const { blogid } = req.body;
 
     const blog = await Blog.findById(blogid)
       .populate("author", "name")
       .populate("category", "name")
+      .lean()
+      .exec();
+    if (!blog) return next(handleError(404, "Blog not found"));
+
+    res.status(200).json({
+      blog,
+    });
+  } catch (error) {
+    next(handleError(500, "Error from blog controller"));
+  }
+};
+// // Get blog by slug
+export const getBlogDetails = async (req, res, next) => {
+  try {
+    const { slug } = req.params;
+    
+
+    const blog = await Blog.findOne({ slug })
+      .populate("author", "name avatar role")
+      .populate("category", "name slug")
+      .sort({ createdAt: -1 })
       .lean()
       .exec();
     if (!blog) return next(handleError(404, "Blog not found"));

@@ -5,8 +5,10 @@ import { Button } from "./ui/button";
 import { FaCalendarAlt } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import Loading from "./ui/loding";
+import { Link } from "react-router-dom";
+import { RouteBlogDetails } from "@/helpers/RouteName";
 
-function BlogCard({ author, title, featuredImage, date, avatar }) {
+function BlogCard({ author, title, featuredImage, date, avatar, category, slug }) {
   const userData = useSelector((state) => state.user);
   const user = userData.user.user;
 
@@ -20,10 +22,12 @@ function BlogCard({ author, title, featuredImage, date, avatar }) {
               <AvatarImage src={avatar || ''} />
               <AvatarFallback>{author}</AvatarFallback>
             </Avatar>
-            <p className="font-bold text-gray-500 ml-4">{author}</p>
+            <p className="font-bold text-gray-500 ml-2 text-sm">{author}</p>
           </div>
-          <Button className={"rounded-full cursor-pointer"} variant={"outline"}>
-            Admin
+          <Button className={"rounded cursor-pointer"} variant={"outline"}>
+            <Link to={RouteBlogDetails(category.slug, slug)}>
+            Details
+            </Link>
           </Button>
         </div>
         {/* Card image */}

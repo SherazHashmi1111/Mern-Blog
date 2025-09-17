@@ -3,7 +3,7 @@
 // ===============================
 import express from "express";
 import upload from "../config/multter.js";
-import { addBolg, deleteBlog, getAllBlogs, getBlog, updateBlog} from "../controllers/blog.controller.js";
+import { addBolg, deleteBlog, getAllBlogs, getBlog, getBlogDetails, updateBlog} from "../controllers/blog.controller.js";
 
 const BlogRoute = express.Router();
 
@@ -17,6 +17,7 @@ BlogRoute.post("/add", upload.single("file"), addBolg);
 BlogRoute.get("/all", getAllBlogs);
 BlogRoute.delete("/delete/:blogid", deleteBlog);
 BlogRoute.get("/blog/:blogid", getBlog);
+BlogRoute.get("/blog-details/:slug", getBlogDetails);
 BlogRoute.post("/all", upload.single("file"), deleteBlog);
 BlogRoute.put("/edit/:blogid", upload.single("file"), updateBlog);
 

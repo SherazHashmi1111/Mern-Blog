@@ -43,6 +43,8 @@ function Index() {
             featuredImage={item.featuredImage}
             date={item.updatedAt}
             avatar={item.author.avatar}
+            category={item.category}
+            slug={item.slug}
           />
         ))
       ) : (
