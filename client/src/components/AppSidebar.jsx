@@ -20,8 +20,18 @@ import { FaBlogger } from "react-icons/fa6";
 import { FaRegComments } from "react-icons/fa";
 import { FaUsers } from "react-icons/fa";
 import { GoDot } from "react-icons/go";
+import { useFetch } from "@/hooks/useFetch";
+import { getEnv } from "@/helpers/getEnv";
 
 function AppSidebar() {
+  const { data, error, loading } = useFetch(
+    `${getEnv("VITE_API_BASE_URL")}/category/all`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
+  );
+
   return (
     <Sidebar className="mt-16">
       {/* Side bar header */}
@@ -88,15 +98,28 @@ function AppSidebar() {
           <SidebarGroupLabel>Categories</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuSubButton asChild>
-                  <Link to="/">
-                    <GoDot className="mr-2" />
-                    {/* This is dynamic will be change later */}
-                    Dynamic categories
-                  </Link>
-                </SidebarMenuSubButton>
-              </SidebarMenuItem>
+              {data && data?.categories?.length > 0 ? (
+                data.categories.map((category, index) => (
+                  <SidebarMenuItem key={index}>
+                    <SidebarMenuSubButton asChild>
+                      <Link to={`/categories/${category.slug}`}>
+                        <GoDot className="mr-2" />
+                        {category.name}
+                      </Link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuItem>
+                ))
+              ) : (
+                <SidebarMenuItem key={"no-category"}>
+                  <SidebarMenuSubButton asChild>
+                    <Link to="/">
+                      <GoDot className="mr-2" />
+                      {/* This is dynamic will be change later */}
+                      No category
+                    </Link>
+                  </SidebarMenuSubButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

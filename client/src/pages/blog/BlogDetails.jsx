@@ -93,7 +93,7 @@ function BlogDetails() {
               <TableBody>
                 {blogs && blogs?.blogs?.length > 0 ? (
                   blogs.blogs.map((item) => (
-                    <TableRow>
+                    <TableRow key={item._id}>
                       <TableCell
                         className={`w-[17%] whitespace-normal break-words`}
                       >
@@ -142,7 +142,7 @@ function BlogDetails() {
                     </TableRow>
                   ))
                 ) : (
-                  <TableRow>
+                  <TableRow >
                     <TableCell colSpan="3" className={`text-center`}>
                       Data not found
                     </TableCell>
