@@ -3,32 +3,50 @@ import { Card, CardContent } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "./ui/button";
 import { FaCalendarAlt } from "react-icons/fa";
-import img from '../assets/images/img.jpg'
+import { useSelector } from "react-redux";
+import Loading from "./ui/loding";
 
-function BlogCard() {
+function BlogCard({ author, title, featuredImage, date, avatar }) {
+  const userData = useSelector((state) => state.user);
+  const user = userData.user.user;
+
   return (
-    <Card className={"w-full"}>
+    <Card className={"w-full h-110"} key={""}>
       <CardContent>
         {/* Card topbar */}
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
+            <Avatar className="w-14 h-14">
+              <AvatarImage src={avatar || ''} />
+              <AvatarFallback>{author}</AvatarFallback>
             </Avatar>
-            <p className="font-bold text-gray-500 ml-4">G Blog</p>
+            <p className="font-bold text-gray-500 ml-4">{author}</p>
           </div>
-          <Button className={'rounded-full cursor-pointer'} variant={'outline'}>Admin</Button>
+          <Button className={"rounded-full cursor-pointer"} variant={"outline"}>
+            Admin
+          </Button>
         </div>
         {/* Card image */}
         <div className="mt-5">
-            <img src={img} alt="" className="rounded-lg" />
+          <img
+            src={featuredImage}
+            alt=""
+            className="rounded-lg h-36 w-full"
+          />
         </div>
         <div className="mt-5 flex text-gray-600 items-center">
-            <FaCalendarAlt/>
-            <div className="ml-5">25-December-2025</div>
+          <FaCalendarAlt />
+          <div className="ml-5">
+            {new Date(date).toLocaleString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </div>
         </div>
-        <div className="text-2xl font-bold text-black mt-4"><h2>25 High Demand skills in 2025</h2></div>
+        <div className="text-2xl font-bold text-black mt-4">
+          <h2>{title}</h2>
+        </div>
       </CardContent>
     </Card>
   );
