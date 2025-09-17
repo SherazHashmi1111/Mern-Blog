@@ -27,6 +27,7 @@ function Index() {
     };
     fetchBlogs();
   }, []);
+  
   return (
     <Card
       className={
@@ -41,7 +42,7 @@ function Index() {
             title={item.title}
             featuredImage={item.featuredImage}
             date={item.updatedAt}
-            avatar={img}
+            avatar={item.author.avatar}
           />
         ))
       ) : (

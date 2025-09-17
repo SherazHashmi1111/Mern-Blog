@@ -50,7 +50,7 @@ export const addBolg = async (req, res, next) => {
 export const getAllBlogs = async (req, res, next) => {
   try {
     const blogs = await Blog.find()
-      .populate("author", "name")
+      .populate("author", "name avatar")
       .populate("category", "name")
       .sort({ created_at: -1 })
       .lean()
