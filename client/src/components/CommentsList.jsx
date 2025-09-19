@@ -8,7 +8,6 @@ import moment from "moment";
 import { useSelector } from "react-redux";
 
 function CommentsList({ blogid, newComment }) {
-  console.log(newComment);
   const user = useSelector((state) => state.user);
   const [comments, setComments] = useState();
   //   Fetch all comments

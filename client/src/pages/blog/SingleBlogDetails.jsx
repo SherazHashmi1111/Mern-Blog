@@ -13,6 +13,7 @@ import { FaHeart } from "react-icons/fa";
 import { FaRegComment } from "react-icons/fa";
 import Comment from "@/components/Comment";
 import { useSelector } from "react-redux";
+import CommentCount from "@/components/CommentCount";
 function SingleBlogDetails() {
   
   
@@ -34,7 +35,7 @@ function SingleBlogDetails() {
         <div className="w-[70%] border-2 p-4">
           <div className="flex items-center justify-between ">
             <div className="w-full flex gap-3 items-center p-4">
-              <Avatar>
+              <Avatar className='w-25 h-25'>
                 <AvatarImage src={data.blog.author.avatar} />
               </Avatar>
               <div className="flex flex-col text-gray-600">
@@ -48,11 +49,9 @@ function SingleBlogDetails() {
                 </p>
               </div>
             </div>
-            <Button className={"mr-4 cursor-pointer"} variant={"outline"}>
-              <CiHeart />
-              <FaHeart color="red" />
-              <FaRegComment />
-            </Button>
+            <div className={"mr-4 cursor-pointer"} variant={"outline"}>
+              <CommentCount blogid={data.blog._id}/>
+            </div>
           </div>
           <div className="w-full h-100 my-4 mx-auto">
             <img src={data.blog.featuredImage} alt="" className="rounded w-full h-full object-cover" />

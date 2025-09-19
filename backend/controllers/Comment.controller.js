@@ -35,7 +35,8 @@ export const getAllComments = async (req, res, next) => {
 
     // Find comments by blog ID
     const comments = await Comment.find({ blogid })
-      .sort({ createdAt: -1 }).populate("author", "name avatar")
+      .sort({ createdAt: -1 })
+      .populate("author", "name avatar")
       .lean()
       .exec();
 
@@ -50,41 +51,22 @@ export const getAllComments = async (req, res, next) => {
     next(handleError(500, "Error fetching comments"));
   }
 };
+// Comments count
+export const commentCount = async (req, res, next) => {
+  try {
+    const { blogid } = req.params;
 
-// Update category logic goes here
-// export const updateCategory = async (req, res, next) => {
-//   try {
-//     const { name, slug } = req.body;
-//     const { categoryid } = req.params;
-//     const category = await Category.findByIdAndUpdate(
-//       categoryid,
-//       {
-//         name,
-//         slug,
-//       },
-//       { new: true }
-//     );
+    // Validate that blogid is provided
+    if (!blogid) {
+      return next(handleError(400, "Blog ID is required"));
+    }
 
-//     res.status(200).json({
-//       success: true,
-//       message: "Category updated",
-//       category,
-//     });
-//   } catch (error) {
-//     next(handleError(500, "Error from category controller"));
-//   }
-// };
-// Delete category logic goes here
-// export const deleteCategory = async (req, res, next) => {
-//   try {
-//     const { categoryid } = req.params;
-//     await Category.findByIdAndDelete(categoryid);
+    // Find comments by blog ID
+    const commentCount = await Comment.countDocuments({ blogid });
 
-//     res.status(200).json({
-//       success: true,
-//       message: "Category deleted",
-//     });
-//   } catch (error) {
-//     next(handleError(500, "Error from category controller"));
-//   }
-// };
+    // Success response
+    res.status(200).json({ commentCount });
+  } catch (error) {
+    next(handleError(500, "Error fetching comments"));
+  }
+};
