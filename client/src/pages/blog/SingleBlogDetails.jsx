@@ -14,6 +14,7 @@ import { FaRegComment } from "react-icons/fa";
 import Comment from "@/components/Comment";
 import { useSelector } from "react-redux";
 import CommentCount from "@/components/CommentCount";
+import LikeCount from "@/components/LikeCount";
 function SingleBlogDetails() {
   
   
@@ -49,8 +50,9 @@ function SingleBlogDetails() {
                 </p>
               </div>
             </div>
-            <div className={"mr-4 cursor-pointer"} variant={"outline"}>
+            <div className={"mr-4 cursor-pointer flex gap-5"} variant={"outline"}>
               <CommentCount blogid={data.blog._id}/>
+              <LikeCount blogid={data.blog._id}/>
             </div>
           </div>
           <div className="w-full h-100 my-4 mx-auto">
