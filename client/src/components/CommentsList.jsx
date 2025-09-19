@@ -3,10 +3,13 @@ import { showToast } from "@/helpers/showToast";
 import React, { useEffect, useState } from "react";
 import { Avatar } from "./ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
-import userIcon from '../assets/images/user.png'
+import userIcon from "../assets/images/user.png";
 import moment from "moment";
+import { useSelector } from "react-redux";
 
-function CommentsList({ blogid }) {
+function CommentsList({ blogid, newComment }) {
+  console.log(newComment);
+  const user = useSelector((state) => state.user);
   const [comments, setComments] = useState();
   //   Fetch all comments
   useEffect(() => {
@@ -29,21 +32,48 @@ function CommentsList({ blogid }) {
 
   return (
     <div className="">
-        <h4 className="text-lg font-bold underline text-orange-500">{comments?.comments?.length} Comments</h4>
+      <h4 className="text-lg font-bold underline text-orange-500">
+        {newComment ? (
+          <>{comments && comments?.comments?.length + 1}</>
+        ) : (
+          <>{comments && comments?.comments?.length}</>
+        )}{" "}
+        Comments
+      </h4>
+      {newComment && (
+        <div className="border-b py-2">
+          <div className="flex items-center gap-2">
+            <Avatar>
+              <AvatarImage src={user?.user?.user.avatar || userIcon} />
+            </Avatar>
+            <div className="mb-5">
+              <p className="text-xl">{user?.user?.user.name}</p>
+              <span className="text-sm">
+                {moment(newComment.createdAt).format("MMM Do YY")}
+              </span>
+            </div>
+          </div>
+          <p className="ml-10 text-justify text-sm text-gray-700">
+            {newComment.comment}
+          </p>
+        </div>
+      )}
       {comments && comments?.comments?.length > 0 ? (
         comments.comments.map((item) => (
           <div className="border-b py-2" key={item._id}>
             <div className="flex items-center gap-2">
-                <Avatar>
-                    <AvatarImage src={item.author.avatar || userIcon}/>
-                </Avatar>
-                <div className="mb-5">
+              <Avatar>
+                <AvatarImage src={item.author.avatar || userIcon} />
+              </Avatar>
+              <div className="mb-5">
                 <p className="text-xl">{item.author.name}</p>
-                <span className="text-sm">{moment(item.createdAt).format("MMM Do YY")}</span>
-                </div>
+                <span className="text-sm">
+                  {moment(item.createdAt).format("MMM Do YY")}
+                </span>
+              </div>
             </div>
             <p className="ml-10 text-justify text-sm text-gray-700">
-                {item.comment}
+              {item.comment}
             </p>
           </div>
         ))

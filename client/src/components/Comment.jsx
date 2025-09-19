@@ -23,7 +23,7 @@ import CommentsList from "./CommentsList";
 function Comment({ blogid }) {
   const user = useSelector((state) => state.user);
   const userid = user.user.user.id;
-  
+  const [newComment, setNewComment] = useState();
 
   // Form Schema
   const formSchema = z.object({
@@ -50,7 +50,7 @@ function Comment({ blogid }) {
         body: JSON.stringify(updatedValues),
       });
       const resData = await res.json();
-
+      setNewComment(resData.comment);
       // handle HTTP errors (non-2xx)
       if (!res.ok) {
         showToast("error", resData?.message || "Something went wrong!");
@@ -64,7 +64,6 @@ function Comment({ blogid }) {
     }
   }
 
- 
   return (
     <div>
       <div className="mt-5 border-t flex items-center gap-2 py-2 text-2xl font-bold">
@@ -96,13 +95,13 @@ function Comment({ blogid }) {
               Add Comment
             </Button>
             <div className="border rounded-xl py-4 px-2">
-                <CommentsList blogid={blogid}/>
+              <CommentsList blogid={blogid} newComment={newComment} />
             </div>
           </form>
         </Form>
       ) : (
-        <Button asChild variant={'ghost'}>
-            <Link to={RouteSignin}>Plz login to see comments</Link>
+        <Button asChild variant={"ghost"}>
+          <Link to={RouteSignin}>Plz login to see comments</Link>
         </Button>
       )}
     </div>
