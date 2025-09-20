@@ -51,6 +51,27 @@ export const getAllComments = async (req, res, next) => {
     next(handleError(500, "Error fetching comments"));
   }
 };
+// Get all comments
+export const getComments = async (req, res, next) => {
+  
+  try {
+    // Find comments 
+    const comments = await Comment.find()
+      .populate("author", "name avatar").populate("blogid", "title")
+      .lean()
+      .exec();
+
+    // Return 404 only if blog ID is valid but no comments exist
+    if (!comments || comments.length === 0) {
+      return next(handleError(404, "No comments found for this blog"));
+    }
+
+    // Success response
+    res.status(200).json({ comments });
+  } catch (error) {
+    next(handleError(500, "Error fetching comments"));
+  }
+};
 // Comments count
 export const commentCount = async (req, res, next) => {
   try {
@@ -68,5 +89,19 @@ export const commentCount = async (req, res, next) => {
     res.status(200).json({ commentCount });
   } catch (error) {
     next(handleError(500, "Error fetching comments"));
+  }
+};
+// Delete comment
+export const deleteComment = async (req, res, next) => {
+  try {
+    const { commentid } = req.params;
+    await Comment.findByIdAndDelete(commentid);
+
+    res.status(200).json({
+      success: true,
+      message: "Comment deleted",
+    });
+  } catch (error) {
+    next(handleError(500, "Error from comment controller"));
   }
 };

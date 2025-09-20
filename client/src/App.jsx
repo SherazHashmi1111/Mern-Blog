@@ -8,6 +8,7 @@ import {
   RouteBlogDetails,
   RouteCategoryBlogs,
   RouteCategoryDetails,
+  RouteComments,
   RouteIndex,
   RouteProfile,
   RouteSearch,
@@ -29,6 +30,7 @@ import UpdateBlog from "./pages/blog/UpdateBlog";
 import SingleBlogDetails from "./pages/blog/SingleBlogDetails";
 import ByCategoryBlogs from "./pages/blog/ByCategoryBlogs";
 import SearchResult from "./pages/SearchResult";
+import Comments from "./pages/Comments";
 
 function App() {
   return (
@@ -48,6 +50,7 @@ function App() {
           <Route path={RouteBlogDetails()} element={<SingleBlogDetails />} />
           <Route path={RouteCategoryBlogs()} element={<ByCategoryBlogs />} />
           <Route path={RouteSearch()} element={<SearchResult />} />
+          <Route path={RouteComments} element={<Comments />} />
         </Route>
         <Route path={RouteSignin} element={<Signin />}></Route>
         <Route path={RouteSignup} element={<Signup />}></Route>

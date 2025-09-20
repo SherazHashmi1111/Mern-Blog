@@ -22,7 +22,7 @@ import { FaUsers } from "react-icons/fa";
 import { GoDot } from "react-icons/go";
 import { useFetch } from "@/hooks/useFetch";
 import { getEnv } from "@/helpers/getEnv";
-import { RouteCategoryBlogs } from "@/helpers/RouteName";
+import { RouteCategoryBlogs, RouteComments } from "@/helpers/RouteName";
 
 function AppSidebar() {
   const { data, error, loading } = useFetch(
@@ -75,7 +75,7 @@ function AppSidebar() {
 
               <SidebarMenuItem>
                 <SidebarMenuSubButton asChild>
-                  <Link to="/">
+                  <Link to={RouteComments}>
                     <FaRegComments className="mr-2" />
                     Comments
                   </Link>
