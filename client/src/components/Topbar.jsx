@@ -56,7 +56,7 @@ function Topbar() {
     <div className="w-full h-16 bg-white fixed flex items-center justify-between border-b px-10 z-10">
       <div className="flex items-center justify-center">
         <img src={logo} alt="Logo is here" width={80} />
-        <h1 className="text-2xl font-bold text-yellow-500">Digital Blogger</h1>
+        <h1 className="text-2xl font-bold text-yellow-600"><span className="text-4xl text-violet-700">D</span>igital <span className="text-4xl text-violet-700">B</span>logger</h1>
       </div>
       <div className="w-[50%]">
         <SearchBox />

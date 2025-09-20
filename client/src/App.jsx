@@ -10,6 +10,7 @@ import {
   RouteCategoryDetails,
   RouteIndex,
   RouteProfile,
+  RouteSearch,
   RouteSignin,
   RouteSignup,
   RouteUpdateBlog,
@@ -27,6 +28,7 @@ import AddBlog from "./pages/blog/AddBlog";
 import UpdateBlog from "./pages/blog/UpdateBlog";
 import SingleBlogDetails from "./pages/blog/SingleBlogDetails";
 import ByCategoryBlogs from "./pages/blog/ByCategoryBlogs";
+import SearchResult from "./pages/SearchResult";
 
 function App() {
   return (
@@ -45,6 +47,7 @@ function App() {
           <Route path={RouteUpdateBlog()} element={<UpdateBlog />} />
           <Route path={RouteBlogDetails()} element={<SingleBlogDetails />} />
           <Route path={RouteCategoryBlogs()} element={<ByCategoryBlogs />} />
+          <Route path={RouteSearch()} element={<SearchResult />} />
         </Route>
         <Route path={RouteSignin} element={<Signin />}></Route>
         <Route path={RouteSignup} element={<Signup />}></Route>

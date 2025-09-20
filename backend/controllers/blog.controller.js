@@ -210,6 +210,26 @@ export const blogByCategory = async (req, res, next) => {
 
     res.status(200).json({
       relatedBlogs,
+      categoryData
+    });
+  } catch (error) {
+    next(handleError(500, "Error from blog controller"));
+  }
+};
+// // Get one blog by id
+export const blogBySearch = async (req, res, next) => {
+  try {
+    const { q } = req.query;
+    
+    
+    const blogs = await Blog.find({title :  {$regex: q, $options: 'i'}})
+      .populate("category", "slug")
+      .populate("author", "name avatar")
+      .lean()
+      .exec();
+    
+    res.status(200).json({
+      blogs
     });
   } catch (error) {
     next(handleError(500, "Error from blog controller"));
