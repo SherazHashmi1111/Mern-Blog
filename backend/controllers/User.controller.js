@@ -10,6 +10,7 @@ export const getUser = async (req, res, next) => {
     const { userid } = req.params;
     const user = await User.findOne({ _id: userid }).lean().exec();
     if (!user) return next(handleError(404, "User not found"));
+    delete user.password;
     res.status(200).json({
       success: true,
       message: "User data found",

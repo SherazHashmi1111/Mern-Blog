@@ -22,6 +22,7 @@ import { FaUsers } from "react-icons/fa";
 import { GoDot } from "react-icons/go";
 import { useFetch } from "@/hooks/useFetch";
 import { getEnv } from "@/helpers/getEnv";
+import { RouteCategoryBlogs } from "@/helpers/RouteName";
 
 function AppSidebar() {
   const { data, error, loading } = useFetch(
@@ -100,9 +101,10 @@ function AppSidebar() {
             <SidebarMenu>
               {data && data?.categories?.length > 0 ? (
                 data.categories.map((category, index) => (
+                  
                   <SidebarMenuItem key={index}>
                     <SidebarMenuSubButton asChild>
-                      <Link to={`/categories/${category.slug}`}>
+                      <Link to={RouteCategoryBlogs(category.slug)}>
                         <GoDot className="mr-2" />
                         {category.name}
                       </Link>

@@ -82,7 +82,7 @@ function CategoryDetails() {
                 <TableBody>
                   {data && data?.categories?.length > 0 ? (
                     data.categories.map((item) => (
-                      <TableRow>
+                      <TableRow key = {item._id}>
                         <TableCell className={``}>{item.name}</TableCell>
                         <TableCell className={``}>{item.slug}</TableCell>
                         <TableCell className={``}>

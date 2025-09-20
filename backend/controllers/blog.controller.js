@@ -177,7 +177,34 @@ export const relatedBlog = async (req, res, next) => {
     const relatedBlogs = await Blog.find({
       category: categoryId,
       slug: { $ne: blog },
-    }).populate('category','slug')
+    })
+      .populate("category", "slug")
+      .lean()
+      .exec();
+
+    res.status(200).json({
+      relatedBlogs,
+    });
+  } catch (error) {
+    next(handleError(500, "Error from blog controller"));
+  }
+};
+// // Get one blog by id
+export const blogByCategory = async (req, res, next) => {
+  try {
+    const { category } = req.params;
+
+    const categoryData = await Category.findOne({ slug: category });
+    if (!categoryData) {
+      return next(404, "Category data not found");
+    }
+    const categoryId = categoryData._id;
+
+    const relatedBlogs = await Blog.find({
+      category: categoryId,
+    })
+      .populate("category", "slug")
+      .populate("author", "name avatar")
       .lean()
       .exec();
 
