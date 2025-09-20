@@ -1,5 +1,6 @@
 import cloudinary from "../config/cloudinary.js";
 import Blog from "../models/blog.model.js";
+import Category from "../models/category.model.js";
 import { handleError } from "./../helpers/handleError.js";
 import { encode } from "entities";
 
@@ -86,7 +87,6 @@ export const getBlog = async (req, res, next) => {
 export const getBlogDetails = async (req, res, next) => {
   try {
     const { slug } = req.params;
-    
 
     const blog = await Blog.findOne({ slug })
       .populate("author", "name avatar role")
@@ -158,6 +158,31 @@ export const deleteBlog = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Blog deleted",
+    });
+  } catch (error) {
+    next(handleError(500, "Error from blog controller"));
+  }
+};
+// // Get one blog by id
+export const relatedBlog = async (req, res, next) => {
+  try {
+    const { category, blog } = req.params;
+
+    const categoryData = await Category.findOne({ slug: category });
+    if (!categoryData) {
+      return next(404, "Category data not found");
+    }
+    const categoryId = categoryData._id;
+
+    const relatedBlogs = await Blog.find({
+      category: categoryId,
+      slug: { $ne: blog },
+    }).populate('category','slug')
+      .lean()
+      .exec();
+
+    res.status(200).json({
+      relatedBlogs,
     });
   } catch (error) {
     next(handleError(500, "Error from blog controller"));
