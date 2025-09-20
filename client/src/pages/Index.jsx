@@ -3,12 +3,15 @@ import { Card } from "@/components/ui/card";
 import { getEnv } from "@/helpers/getEnv";
 import React, { useEffect, useState } from "react";
 import img from "../assets/images/img.jpg";
+import Loading from "@/components/ui/loding";
 
 function Index() {
   const [blogs, setBlogs] = useState([]); // state for blogs
+  const [loading, setLoading] = useState(false);
   //Fetch Blogs
   useEffect(() => {
     const fetchBlogs = async () => {
+      setLoading(true);
       try {
         const res = await fetch(`${getEnv("VITE_API_BASE_URL")}/blog/all`, {
           method: "GET",
@@ -21,13 +24,15 @@ function Index() {
 
         const data = await res.json();
         setBlogs(data); // store blogs in state
+        setLoading(false);
       } catch (err) {
         console.error(err.message);
       }
     };
     fetchBlogs();
   }, []);
-  
+
+  if (loading) return <Loading />;
   return (
     <Card
       className={
