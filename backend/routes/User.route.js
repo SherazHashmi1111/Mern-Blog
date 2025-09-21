@@ -2,7 +2,7 @@
 // Imports
 // ===============================
 import express from "express";
-import { getUser, updateUser } from "../controllers/User.controller.js";
+import { getAllUser, getUser, updateUser,deleteUser } from "../controllers/User.controller.js";
 import upload from "../config/multter.js";
 
 const UserRoute = express.Router();
@@ -14,6 +14,8 @@ const UserRoute = express.Router();
 // ✅ Get a user by ID
 // Example: GET /api/user/get-user/12345
 UserRoute.get("/get-user/:userid", getUser);
+UserRoute.get("/users", getAllUser);
+UserRoute.delete("/delete/:userid", deleteUser);
 
 // ✅ Update user by ID
 // Accepts form-data with optional file upload (`file` field)

@@ -47,3 +47,4 @@ export const RouteSearch = (q) => {
 };
 
 export const RouteComments = "/comments";
+export const RouteUsers = "/users";

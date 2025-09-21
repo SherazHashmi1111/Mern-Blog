@@ -20,6 +20,39 @@ export const getUser = async (req, res, next) => {
     next(handleError(500, error.message));
   }
 };
+// Getting user data
+export const getAllUser = async (req, res, next) => {
+  
+  try {
+    const users = await User.find().lean().exec();
+    if (!users) return next(handleError(404, "Users not found"));
+    delete users.password;
+    res.status(200).json({
+      success: true,
+      message: "User data found",
+      users,
+    });
+  } catch (error) {
+    next(handleError(500, error.message));
+  }
+};
+// Getting user data
+export const deleteUser = async (req, res, next) => {
+  const { userid } = req.params; // <-- extract id string here
+  try {
+    const user = await User.findByIdAndDelete(userid);
+    if (!user) {
+      return next(handleError(404, "User not found"));
+    }
+    res.status(200).json({
+      success: true,
+      message: "User deleted successfully!",
+    });
+  } catch (error) {
+    next(handleError(500, error.message));
+  }
+};
+
 // Updating user data
 export const updateUser = async (req, res, next) => {
   try {
