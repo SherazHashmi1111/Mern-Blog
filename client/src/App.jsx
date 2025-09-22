@@ -33,6 +33,8 @@ import ByCategoryBlogs from "./pages/blog/ByCategoryBlogs";
 import SearchResult from "./pages/SearchResult";
 import Comments from "./pages/Comments";
 import Users from "./pages/Users";
+import AuthUserProtection from "./components/AuthUserProtection";
+import AuthAdminProtection from "./components/AuthAdminProtection";
 
 function App() {
   return (
@@ -40,20 +42,23 @@ function App() {
       <Routes>
         <Route path={RouteIndex} element={<Layout />}>
           <Route index element={<Index />} />
-          <Route path={RouteProfile} element={<Profile />} />
-          {/* Categories */}
-          <Route path={RouteCategoryDetails} element={<CategoryDetails />} />
-          <Route path={RouteAddCategory} element={<AddCategory />} />
-          <Route path={RouteUpdateCategory()} element={<UpdateCategory />} />
-          {/* Blogs */}
           <Route path={RouteBlog} element={<BlogDetails />} />
-          <Route path={RouteAddBolg} element={<AddBlog />} />
-          <Route path={RouteUpdateBlog()} element={<UpdateBlog />} />
           <Route path={RouteBlogDetails()} element={<SingleBlogDetails />} />
           <Route path={RouteCategoryBlogs()} element={<ByCategoryBlogs />} />
           <Route path={RouteSearch()} element={<SearchResult />} />
+
+          <Route element={<AuthUserProtection/>}>
+          <Route path={RouteProfile} element={<Profile />} />
+          <Route path={RouteAddBolg} element={<AddBlog />} />
+          <Route path={RouteCategoryDetails} element={<CategoryDetails />} />
+          <Route path={RouteAddCategory} element={<AddCategory />} />
+          <Route path={RouteUpdateCategory()} element={<UpdateCategory />} />
+          <Route path={RouteUpdateBlog()} element={<UpdateBlog />} />
+          </Route>
+          <Route element={<AuthAdminProtection/>}>
           <Route path={RouteComments} element={<Comments />} />
           <Route path={RouteUsers} element={<Users />} />
+          </Route>
         </Route>
         <Route path={RouteSignin} element={<Signin />}></Route>
         <Route path={RouteSignup} element={<Signup />}></Route>
