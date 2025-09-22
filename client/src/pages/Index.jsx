@@ -31,6 +31,7 @@ function Index() {
     };
     fetchBlogs();
   }, []);
+console.log(blogs);
 
   if (loading) return <Loading />;
   return (
@@ -41,7 +42,9 @@ function Index() {
     >
       {blogs && blogs?.blogs?.length > 0 ? (
         blogs.blogs.map((item) => (
+          
           <BlogCard
+          
             key={item._id}
             author={item.author.name}
             title={item.title}
@@ -53,7 +56,7 @@ function Index() {
           />
         ))
       ) : (
-        <div>No data found</div>
+        <div className="text-2xl font-bold col-span-3">No data found</div>
       )}
     </Card>
   );

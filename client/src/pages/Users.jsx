@@ -77,9 +77,7 @@ function Users() {
       <div className="">
         <Card className="max-w-[95%] mx-4 mt-20">
           <CardHeader>
-            <Button className="cursor-pointer w-24" asChild>
-              <Link to={RouteAddBolg}>Add user</Link>
-            </Button>
+            <h2 className="text-2xl font-bold text-violet-700 underline capitalize">All useres Details</h2>
           </CardHeader>
           <CardContent className={`w-full`}>
             <Table>
@@ -140,7 +138,7 @@ function Users() {
                   ))
                 ) : (
                   <TableRow >
-                    <TableCell colSpan="3" className={`text-center`}>
+                    <TableCell colSpan="6" className={`text-center pt-5 text-2xl font-bold`}>
                       Data not found
                     </TableCell>
                   </TableRow>
