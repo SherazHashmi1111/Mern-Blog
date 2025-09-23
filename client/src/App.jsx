@@ -42,22 +42,21 @@ function App() {
       <Routes>
         <Route path={RouteIndex} element={<Layout />}>
           <Route index element={<Index />} />
-          <Route path={RouteBlog} element={<BlogDetails />} />
           <Route path={RouteBlogDetails()} element={<SingleBlogDetails />} />
-          <Route path={RouteCategoryBlogs()} element={<ByCategoryBlogs />} />
-          <Route path={RouteSearch()} element={<SearchResult />} />
-
-          <Route element={<AuthUserProtection/>}>
-          <Route path={RouteProfile} element={<Profile />} />
-          <Route path={RouteAddBolg} element={<AddBlog />} />
-          <Route path={RouteCategoryDetails} element={<CategoryDetails />} />
-          <Route path={RouteAddCategory} element={<AddCategory />} />
-          <Route path={RouteUpdateCategory()} element={<UpdateCategory />} />
-          <Route path={RouteUpdateBlog()} element={<UpdateBlog />} />
+          <Route element={<AuthUserProtection />}>
+            <Route path={RouteSearch()} element={<SearchResult />} />
+            <Route path={RouteBlog} element={<BlogDetails />} />
+            <Route path={RouteProfile} element={<Profile />} />
+            <Route path={RouteAddBolg} element={<AddBlog />} />
+            <Route path={RouteCategoryDetails} element={<CategoryDetails />} />
+            <Route path={RouteAddCategory} element={<AddCategory />} />
+            <Route path={RouteCategoryBlogs()} element={<ByCategoryBlogs />} />
+            <Route path={RouteUpdateCategory()} element={<UpdateCategory />} />
+            <Route path={RouteUpdateBlog()} element={<UpdateBlog />} />
           </Route>
-          <Route element={<AuthAdminProtection/>}>
-          <Route path={RouteComments} element={<Comments />} />
-          <Route path={RouteUsers} element={<Users />} />
+          <Route element={<AuthAdminProtection />}>
+            <Route path={RouteComments} element={<Comments />} />
+            <Route path={RouteUsers} element={<Users />} />
           </Route>
         </Route>
         <Route path={RouteSignin} element={<Signin />}></Route>

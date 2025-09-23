@@ -31,7 +31,6 @@ function Index() {
     };
     fetchBlogs();
   }, []);
-console.log(blogs);
 
   if (loading) return <Loading />;
   return (

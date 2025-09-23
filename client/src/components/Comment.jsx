@@ -22,7 +22,11 @@ import CommentsList from "./CommentsList";
 
 function Comment({ blogid }) {
   const user = useSelector((state) => state.user);
-  const userid = user.user.user.id;
+  let userid = null;
+  if (user && user.isLogedIn) {
+    userid = user.user.user.id;
+  }
+
   const [newComment, setNewComment] = useState();
 
   // Form Schema
@@ -65,46 +69,57 @@ function Comment({ blogid }) {
   }
 
   return (
-    <div>
+    <>
       <div className="mt-5 border-t flex items-center gap-2 py-2 text-2xl font-bold">
         <FaComments className="text-violet-700" /> Comments
       </div>
-      {/* Comments form */}
-      {!user.isLoggedIn ? (
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <div className="mb-3">
-              <FormField
-                control={form.control}
-                name="comment"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Comment</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Type your comment here..."
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <Button type="submit" className="cursor-pointer">
-              Add Comment
+      {user && user.isLogedIn ? (
+        <div>
+          {/* Comments form */}
+          {!user.isLoggedIn ? (
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-8"
+              >
+                <div className="mb-3">
+                  <FormField
+                    control={form.control}
+                    name="comment"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Comment</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Type your comment here..."
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <Button type="submit" className="cursor-pointer">
+                  Add Comment
+                </Button>
+                <div className="border rounded-xl py-4 px-2">
+                  <CommentsList blogid={blogid} newComment={newComment} />
+                </div>
+              </form>
+            </Form>
+          ) : (
+            <Button asChild variant={"ghost"}>
+              <Link to={RouteSignin}>Plz login to see comments</Link>
             </Button>
-            <div className="border rounded-xl py-4 px-2">
-              <CommentsList blogid={blogid} newComment={newComment} />
-            </div>
-          </form>
-        </Form>
+          )}
+        </div>
       ) : (
-        <Button asChild variant={"ghost"}>
-          <Link to={RouteSignin}>Plz login to see comments</Link>
+        <Button className="w-full my-5" asChild>
+          <Link to={RouteSignin}>Please Sign in to see comments</Link>
         </Button>
       )}
-    </div>
+    </>
   );
 }
 
