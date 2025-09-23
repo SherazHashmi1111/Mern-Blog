@@ -13,18 +13,18 @@ function BlogCard({ author, title, featuredImage, date, avatar, category, slug }
   const user = userData.user.user;
 
   return (
-    <Card className={"w-full h-110"} key={""}>
+    <Card className={"w-full lg:h-110 md:h-80"} key={""}>
       <CardContent>
         {/* Card topbar */}
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <Avatar className="w-14 h-14">
+            <Avatar className="lg:w-14 lg:h-14 md:w-10 md:h-10">
               <AvatarImage src={avatar || ''} />
               <AvatarFallback>{author}</AvatarFallback>
             </Avatar>
-            <p className="font-bold text-gray-500 ml-2 text-sm">{author}</p>
+            <p className="font-bold text-gray-500 ml-2 lg:text-sm md:text-[12px]">{author}</p>
           </div>
-          <Button className={"rounded cursor-pointer"} variant={"outline"}>
+          <Button className={"rounded cursor-pointer lg:text-sm md:text-[12px] "} variant={"outline"}>
             <Link to={RouteBlogDetails(category.slug, slug)}>
             Details
             </Link>
@@ -35,12 +35,12 @@ function BlogCard({ author, title, featuredImage, date, avatar, category, slug }
           <img
             src={featuredImage}
             alt=""
-            className="rounded-lg h-36 w-full"
+            className="rounded-lg lg:h-36 w-full md:h-24"
           />
         </div>
         <div className="mt-5 flex text-gray-600 items-center">
           <FaCalendarAlt />
-          <div className="ml-5">
+          <div className="ml-5 md:text-sm md:ml-2">
             {new Date(date).toLocaleString("en-US", {
               year: "numeric",
               month: "long",
@@ -48,7 +48,7 @@ function BlogCard({ author, title, featuredImage, date, avatar, category, slug }
             })}
           </div>
         </div>
-        <div className="text-2xl font-bold text-black mt-4">
+        <div className="lg:text-2xl md:text-lg  font-bold text-black mt-4">
           <h2>{title}</h2>
         </div>
       </CardContent>

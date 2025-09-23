@@ -56,30 +56,29 @@ function BlogDetails() {
 
   //Deleting blog logic
   const handleDelete = async (id) => {
-  const response = await deleteData(
-    `${getEnv("VITE_API_BASE_URL")}/blog/delete/${id}`
-  );
+    const response = await deleteData(
+      `${getEnv("VITE_API_BASE_URL")}/blog/delete/${id}`
+    );
 
-  if (response) {
-    setRefreshData(!refreshData);
-    showToast("Success", "Blog Deleted");
-  } else {
-    showToast("Error", "Blog Not Deleted");
-  }
-};
-
+    if (response) {
+      setRefreshData(!refreshData);
+      showToast("Success", "Blog Deleted");
+    } else {
+      showToast("Error", "Blog Not Deleted");
+    }
+  };
 
   return (
     <div>
       <div className="">
         <Card className="max-w-[95%] mx-4 mt-20">
           <CardHeader>
-            <Button className="cursor-pointer w-24" asChild>
+            <Button className="cursor-pointer md:w-24 " asChild>
               <Link to={RouteAddBolg}>Add Blog</Link>
             </Button>
           </CardHeader>
           <CardContent className={`w-full`}>
-            <Table>
+            <Table className="md:text-sm text-[.5rem]">
               <TableHeader>
                 <TableRow>
                   <TableHead>Author</TableHead>
@@ -123,26 +122,29 @@ function BlogDetails() {
                           day: "numeric",
                         })}
                       </TableCell>
-                      <TableCell
-                        className={`w-[17%] whitespace-normal break-words`}
-                      >
-                        <Button className={`cursor-pointer`} asChild>
-                          <Link to={RouteUpdateBlog(item._id)}>
-                            <FaRegEdit />
-                          </Link>
-                        </Button>
-                        <Button
-                          className={`cursor-pointer ml-3`}
-                          variant="destructive"
-                          onClick={() => handleDelete(item._id)}
-                        >
-                          <MdDeleteForever />
-                        </Button>
+                      <TableCell className="whitespace-normal overflow-x-auto max-w-[150px]">
+                        <div className="flex items-center">
+                          <Button
+                            className="cursor-pointer p-1 text-xs md:p-2 md:text-sm"
+                            asChild
+                          >
+                            <Link to={RouteUpdateBlog(item._id)}>
+                              <FaRegEdit />
+                            </Link>
+                          </Button>
+                          <Button
+                            className="cursor-pointer ml-2 p-1 text-xs md:p-2 md:text-sm"
+                            variant="destructive"
+                            onClick={() => handleDelete(item._id)}
+                          >
+                            <MdDeleteForever />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))
                 ) : (
-                  <TableRow >
+                  <TableRow>
                     <TableCell colSpan="3" className={`text-center`}>
                       Data not found
                     </TableCell>

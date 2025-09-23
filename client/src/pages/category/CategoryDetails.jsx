@@ -63,8 +63,8 @@ function CategoryDetails() {
       {loading ? (
         <Loading />
       ) : (
-        <div className="">
-          <Card className="max-w-screen-md mx-auto mt-40 flex items-center justify-center">
+        <div className="md:w-[90%] md:mx-auto">
+          <Card className="md:max-w-screen-md md:mx-auto mt-40 flex items-center justify-center">
             <CardHeader className="flex items-center justify-center">
               <Button className="cursor-pointer" asChild>
                 <Link to={RouteAddCategory}>Add Category</Link>
@@ -75,7 +75,7 @@ function CategoryDetails() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Category</TableHead>
-                    <TableHead>Slug</TableHead>
+                    <TableHead className={`hidden md:table-cell`}>Slug</TableHead>
                     <TableHead>Action</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -84,7 +84,7 @@ function CategoryDetails() {
                     data.categories.map((item) => (
                       <TableRow key = {item._id}>
                         <TableCell className={``}>{item.name}</TableCell>
-                        <TableCell className={``}>{item.slug}</TableCell>
+                        <TableCell className={`hidden md:table-cell`}>{item.slug}</TableCell>
                         <TableCell className={``}>
                           <Button className={`cursor-pointer`} asChild>
                             <Link to={RouteUpdateCategory(item._id)}>

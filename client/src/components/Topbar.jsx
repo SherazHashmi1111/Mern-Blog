@@ -55,10 +55,15 @@ function Topbar() {
   return (
     <div className="w-full h-16 bg-white fixed flex items-center justify-between border-b px-10 z-10">
       <div className="flex items-center justify-center">
-        <img src={logo} alt="Logo is here" width={80} />
-        <h1 className="text-2xl font-bold text-yellow-600"><span className="text-4xl text-violet-700">D</span>igital <span className="text-4xl text-violet-700">B</span>logger</h1>
-      </div>
-      <div className="w-[50%]">
+  <img src={logo} alt="Logo is here" className="w-20" />
+  <h1 className="hidden md:block font-bold text-yellow-600 text-base md:text-xl lg:text-3xl">
+    <span className="text-violet-700 text-2xl md:text-3xl lg:text-6xl">D</span>igital{" "}
+    <span className="text-violet-700 text-2xl md:text-3xl lg:text-6xl">B</span>logger
+  </h1>
+</div>
+
+
+      <div className="md:w-[50%] w-[10rem]">
         <SearchBox />
       </div>
       <div>
