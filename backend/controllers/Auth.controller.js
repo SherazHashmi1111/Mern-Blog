@@ -57,7 +57,13 @@ export const Login = async (req, res, next) => {
 
     //Jwt Token generation can be added here
     const token = jwt.sign(
-      { name: user.name, email: user.email, _id: user._id, avatar: user.avatar },
+      {
+        name: user.name,
+        email: user.email,
+        _id: user._id,
+        avatar: user.avatar,
+        role:user.role
+      },
       process.env.JWT_SECRET,
       {
         expiresIn: "1d",
@@ -74,7 +80,12 @@ export const Login = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: "Login successful",
-      user: { id: user._id, name: user.name, email: user.email },
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
     });
   } catch (error) {
     next(handleError(500, "Server Error in auth Controller"));
@@ -94,11 +105,17 @@ export const GoogleLogin = async (req, res, next) => {
       const hashedPassword = await bcrypt.hash(password, salt);
       user = new User({ name, email, avatar, password: hashedPassword });
       await user.save();
-    };
+    }
 
     //Jwt Token generation can be added here
     const token = jwt.sign(
-      { name: user.name, email: user.email, _id: user._id, avatar: user.avatar },
+      {
+        name: user.name,
+        email: user.email,
+        _id: user._id,
+        avatar: user.avatar,
+        role: user.role
+      },
       process.env.JWT_SECRET,
       {
         expiresIn: "1d",
@@ -115,7 +132,13 @@ export const GoogleLogin = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: "Login successful",
-      user: { id: user._id, name: user.name, email: user.email, avatar: user.avatar },
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        role: user.role
+      },
     });
   } catch (error) {
     next(handleError(500, "Server Error in auth Controller"));

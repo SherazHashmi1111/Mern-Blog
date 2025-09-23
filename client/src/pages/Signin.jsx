@@ -71,8 +71,10 @@ function Signin() {
           showToast("error", resData?.message || "Something went wrong!");
           return;
         }
-    
+        
         // success
+        console.log(resData);
+        
         dispatch(setUser(resData));
         navigate(RouteIndex);
         showToast("success", "Logedin Successfully!");
