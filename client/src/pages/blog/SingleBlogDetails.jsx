@@ -23,11 +23,11 @@ function SingleBlogDetails() {
   );
 
   return (
-    <div className="w-full flex gap-5 pt-10 px-4">
+    <div className="w-full flex flex-col md:flex-row gap-5 pt-10 px-4 mx-auto">
       {data && data?.blog && (
-        <div className="w-[70%] border-2 p-4">
-          <div className="flex items-center justify-between ">
-            <div className="w-full flex gap-3 items-center p-4">
+        <div className="md:w-[70%] w-full border-2 p-4 ">
+          <div className="flex md:flex-row flex-col items-center justify-between ">
+            <div className="w-full flex md:flex-row flex-col gap-3 items-center p-4">
               <Avatar className="w-25 h-25">
                 <AvatarImage src={data.blog.author.avatar} />
               </Avatar>
@@ -50,7 +50,7 @@ function SingleBlogDetails() {
               <LikeCount blogid={data.blog._id} />
             </div>
           </div>
-          <div className="w-full h-100 my-4 mx-auto">
+          <div className="w-full h-50 md:h-100 my-4 mx-auto">
             <img
               src={data.blog.featuredImage}
               alt=""
@@ -65,7 +65,7 @@ function SingleBlogDetails() {
           <Comment blogid={data.blog._id} />
         </div>
       )}
-      <div className="w-[25%] border-2">
+      <div className="md:w-[25%] w-full border-2 ">
         <RelatedBlog blog={blog} category={category} />
       </div>
     </div>
